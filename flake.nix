@@ -25,23 +25,28 @@
         packages = {
           demo = pkgs.buildGoModule rec {
             pname = "demo";
-            # To update the derivation, bump the version and set
+            version = "0.0.1";
+            # Every time you update your dependencies (go.mod / go.sum)  you'll
+            # need to update the vendorSha256.
+            #
+            # To find the right hash, set
             #
             #   vendorSha256 = pkgs.lib.fakeSha256;
             #
-            # then run `nix shell`, take the correct hash from the output, and set
+            # then run `nix build`, take the correct hash from the output, and set
             #
             #   vendorSha256 = <the updated hash>;
             #
             # (Yes, that's really how you're expected to do this.)
-            version = "0.0.1";
+            # vendorSha256 = pkgs.lib.fakeSha256;
             vendorSha256 = "sha256-vanKL5s+szW0hduUXGnJNUlyu8wZ2HsBVklIUb/+DLY=";
-            #vendorSha256 = pkgs.lib.fakeSha256;
 
-            # src = pkgs.lib.sources.cleanSource ./.
-            src = pkgs.lib.sources.trace
-              (
-                nix-filter.lib.filter {
+            src =
+              let
+                # Set this to `true` in order to show all of the source files
+                # that will be included in the module build.
+                debug-tracing = false;
+                source-files = nix-filter.lib.filter {
                   root = ./.;
                   include = [
                     "./pkg"
@@ -49,8 +54,15 @@
                     "go.mod"
                     "go.sum"
                   ];
-                }
+                };
+              in
+              (
+                if (debug-tracing) then
+                  pkgs.lib.sources.trace source-files
+                else
+                  source-files
               );
+
 
             # Add any extra packages required to build the binary should go here.
             buildInputs = [ ];
