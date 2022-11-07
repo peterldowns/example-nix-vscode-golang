@@ -32,3 +32,8 @@ Run the binary:
 ```bash
 ./bin/demo help
 ```
+
+Update the flake:
+```bash
+nix flake update
+```
