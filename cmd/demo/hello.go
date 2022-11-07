@@ -22,7 +22,7 @@ var helloCmd = &cobra.Command{
 
 //nolint:gochecknoinits
 func init() {
-	helloFlags.Name = helloCmd.Flags().String("name", "", "name of now")
+	helloFlags.Name = helloCmd.Flags().String("name", "", "name of person to say hello to")
 	_ = helloCmd.MarkFlagRequired("name")
 	root.AddCommand(helloCmd)
 }

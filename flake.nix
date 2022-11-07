@@ -36,17 +36,21 @@
             # (Yes, that's really how you're expected to do this.)
             version = "0.0.1";
             vendorSha256 = "sha256-vanKL5s+szW0hduUXGnJNUlyu8wZ2HsBVklIUb/+DLY=";
+            #vendorSha256 = pkgs.lib.fakeSha256;
 
             # src = pkgs.lib.sources.cleanSource ./.
-            src = nix-filter.lib.filter {
-              root = ./.;
-              include = [
-                "./pkg"
-                "./cmd"
-                "go.mod"
-                "go.sum"
-              ];
-            };
+            src = pkgs.lib.sources.trace
+              (
+                nix-filter.lib.filter {
+                  root = ./.;
+                  include = [
+                    "./pkg"
+                    "./cmd"
+                    "go.mod"
+                    "go.sum"
+                  ];
+                }
+              );
 
             # Add any extra packages required to build the binary should go here.
             buildInputs = [ ];
