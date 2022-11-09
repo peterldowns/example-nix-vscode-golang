@@ -11,9 +11,21 @@ Features:
 
 ## How to
 
-Develop:
+### Run different commands
 ```bash
+# show all available commands
+just
+just --list
+```
+
+### Develop:
+```bash
+# get developer dependencies by entering a nix shell. if you have direnv / lorri installed,
+# this will happen automatically when you cd into the directory.
 nix develop
+nix-shell
+
+# then, inside that environment, open vscode
 code .
 ```
 
@@ -25,22 +37,31 @@ just lint
 
 ### Build:
 ```bash
-just build # binary will be in ./bin/demo
-nix build # binary will be in ./result/bin/demo
-nix-build # binary will be in ./result/bin/demo
-
+# build with `go build`, result is in `./bin/demo`
+just build
+# build with `nix`, result is in `./result/bin/demo`
+nix build
+nix-build
 ```
 
 ### Run the binary:
 ```bash
+# if built with `just build`:
 ./bin/demo help
+# if built with `nix build` or `nix-build`:
 ./result/bin/demo help
+# or, you can build + run directly through nix:
 nix run . -- help
-nix shell -c demo help
+# or, you can open a new shell with the binary available on $PATH through nix:
+nix shell # and then `demo`
+nix shell -c demo help # directly run `demo` from inside this shell
 ```
 
 ### Update the flake.lock:
 ```bash
+# Re-generate the flake.lock file
+nix flake lock
+# Update all dependencies and update the flake.lock file
 nix flake update
 ```
 
